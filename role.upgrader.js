@@ -1,4 +1,4 @@
-var roleUpgrader = {
+const roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -18,11 +18,11 @@ var roleUpgrader = {
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
+            const sources = creep.room.find(FIND_SOURCES);
             if (!creep.memory.sourceId) {
                 creep.memory.sourceId = sources[Math.floor(Math.random() * sources.length)].id;
             }
-            var source = sources.find(source => source.id === creep.memory.sourceId);
+            const source = sources.find(source => source.id === creep.memory.sourceId);
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
