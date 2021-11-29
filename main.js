@@ -36,6 +36,7 @@ module.exports.loop = function () {
     let creeps = [];
     for(const name in Game.creeps) {
         const creep = Game.creeps[name];
+        creep.memory.sourceId = config.ROLE_LIST[creep.memory.role].sourceId || creep.memory.sourceId; // TODO: 临时
         if (creep.store.getFreeCapacity() === 0) {
             creeps.unshift(creep);
         } else {
