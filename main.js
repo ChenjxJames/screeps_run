@@ -3,8 +3,34 @@ const utils = require('utils');
 const roleHarvester = require('role.harvester');
 const roleUpgrader = require('role.upgrader');
 const roleBuilder = require('role.builder');
+const rolePorter = require('role.porter');
 
 module.exports.loop = function () {
+
+    Object.values(Game.rooms).forEach((room) =>{
+        const towers = room.find(FIND_STRUCTURES, {
+            filter: (structure) => structure.structureType == STRUCTURE_TOWER
+            });
+        towers.forEach((tower) => {
+            if(tower) {
+                const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => structure.hits < structure.hitsMax && (
+                        structure.structureType == STRUCTURE_ROAD ||
+                        structure.structureType === STRUCTURE_RAMPART
+                    )
+                });
+                if(closestDamagedStructure) {
+                    tower.repair(closestDamagedStructure);
+                }
+
+                const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+                if(closestHostile) {
+                    tower.attack(closestHostile);
+                }
+            }
+        });
+    });
+
 
     for(const name in Memory.creeps) {
         if(!Game.creeps[name]) {
@@ -18,7 +44,7 @@ module.exports.loop = function () {
         const creeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
         const roleInfo = config.ROLE_LIST[role];
         if(creeps.length < roleInfo.maxCount) {
-            utils.newCreep(Game.spawns['Spawn1'], role);
+            utils.newCreep(Game.spawns['Spawn1'], role, roleInfo.body);
         }
         log += `${role}: ${creeps.length}, `;
     }
@@ -49,6 +75,7 @@ module.exports.loop = function () {
             'harvester': () => roleHarvester.run(creep),
             'upgrader': () => roleUpgrader.run(creep),
             'builder': () => roleBuilder.run(creep),
+            'porter': () => rolePorter.run(creep),
         }
         runs[creep.memory.role]();
     });
