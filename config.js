@@ -22,4 +22,5 @@ module.exports = {
             body: [WORK, CARRY, CARRY, TOUGH, MOVE, MOVE],
         }
     },
+    BUILD_PRIORITY_ITEM_ID: null,
 };
