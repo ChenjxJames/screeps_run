@@ -4,7 +4,9 @@ const rolePorter = {
     let rest = false;
     if (creep.store.getFreeCapacity() > 0 && !creep.memory.porting) {
       let storage = null;
-      const tombstones = creep.room.find(FIND_TOMBSTONES);
+      const tombstones = creep.room.find(FIND_TOMBSTONES, {
+        filter: (ruin) => ruin.store.getUsedCapacity() > 0
+      });
       const ruins = creep.room.find(FIND_RUINS, {
         filter: (ruin) => ruin.store.getUsedCapacity() > 0
       });
