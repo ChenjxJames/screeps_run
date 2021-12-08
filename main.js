@@ -13,25 +13,20 @@ module.exports.loop = function () {
         });
         towers.forEach((tower) => {
             if (tower) {
-
-                // 维修最低血量的建筑
-                const damagedStructureList = tower.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => structure.hits < structure.hitsMax && (
-                        structure.structureType == STRUCTURE_ROAD ||
-                        structure.structureType === STRUCTURE_RAMPART ||
-                        structure.structureType === STRUCTURE_CONTAINER
-                    )
-                });
-                damagedStructureList.sort((a, b) => a.hits - b.hits);
-                if (damagedStructureList.length > 0) {
-                    tower.repair(damagedStructureList[0]);
-                }
-
                 // 攻击所有不属于我的creeps, 开启安全模式
                 const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
                 if (closestHostile) {
                     tower.attack(closestHostile);
                     room.controller.activateSafeMode();
+                } else {
+                    // 维修最低血量的建筑
+                    const damagedStructureList = tower.room.find(FIND_STRUCTURES, {
+                        filter: (structure) => structure.hits < structure.hitsMax
+                    });
+                    damagedStructureList.sort((a, b) => a.hits - b.hits);
+                    if (damagedStructureList.length > 0) {
+                        tower.repair(damagedStructureList[0]);
+                    }
                 }
             }
         });
