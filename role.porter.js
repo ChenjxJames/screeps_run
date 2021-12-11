@@ -2,15 +2,22 @@ const rolePorter = {
   /** @param {Creep} creep **/
   run: function (creep) {
     let rest = false;
-    if (creep.store.getFreeCapacity() > 0 && !creep.memory.porting) {
+    if (!creep.memory.harvesting && creep.store[RESOURCE_ENERGY] == 0) {
+        creep.memory.harvesting = true;
+    }
+    if (creep.memory.harvesting && creep.store.getFreeCapacity() === 0) {
+        creep.memory.harvesting = false;
+    }
+
+    if (creep.memory.harvesting) {
       let storage = null;
+      const droppedResources = creep.room.find(FIND_DROPPED_RESOURCES);
       const tombstones = creep.room.find(FIND_TOMBSTONES, {
         filter: (ruin) => ruin.store.getUsedCapacity() > 0
       });
       const ruins = creep.room.find(FIND_RUINS, {
         filter: (ruin) => ruin.store.getUsedCapacity() > 0
       });
-      const droppedResources = creep.room.find(FIND_DROPPED_RESOURCES)
       if (Object.keys(tombstones).length > 0) {
         storage = tombstones[0];
       } else if (Object.keys(ruins).length > 0) {
@@ -19,12 +26,11 @@ const rolePorter = {
         storage = droppedResources[0];
       }
       if (storage) {
-        if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || creep.pickup(storage) == ERR_NOT_IN_RANGE) {
           creep.moveTo(storage, { visualizePathStyle: { stroke: '#ffaa00' } });
-        } else {
-          creep.memory.porting = true;
         }
       } else {
+        creep.memory.role = 'upgrader';
         rest = true;
       }
     } else {
@@ -32,8 +38,8 @@ const rolePorter = {
         filter: (structure) => {
           return (
             structure.structureType == STRUCTURE_EXTENSION ||
-            structure.structureType == STRUCTURE_TOWER ||
-            structure.structureType == STRUCTURE_SPAWN) &&
+            structure.structureType == STRUCTURE_SPAWN ||
+            structure.structureType == STRUCTURE_TOWER) &&
             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
         }
       });
@@ -46,7 +52,6 @@ const rolePorter = {
             creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
           }
         });
-        creep.memory.porting = false;
       } else {
         rest = true;
       }
