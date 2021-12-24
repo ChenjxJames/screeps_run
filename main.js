@@ -87,7 +87,7 @@ module.exports.loop = function () {
             'upgrader': () => roleUpgrader.run(creep, linkTo),
             'builder': () => roleBuilder.run(creep),
             'porter': () => rolePorter.run(creep),
-            'collector': () => roleCollector.run(creep),
+            'collector': () => roleCollector.run(creep, linkFrom),
         }
         runs[creep.memory.role]();
     });

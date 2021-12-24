@@ -2,10 +2,11 @@ const roleCollector = {
 
     /**
      * @param {Creep} creep
+     * @param {StructureLink} source
      * 采集者和harvester类似
      * 采集资源到SPAWN,EXTENSION,LINK这三类建筑
      */
-    run: function (creep) {
+    run: function (creep, link) {
         if (!creep.memory.harvesting && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.harvesting = true;
         }
@@ -27,11 +28,11 @@ const roleCollector = {
                 filter: (structure) => {
                     return (
                         structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_LINK) &&
+                        structure.structureType == STRUCTURE_EXTENSION) &&
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
+            targets.unshift(link);
             if (targets.length > 0) {
                 targets.some((target) => {
                     if (creep.store.getUsedCapacity() === 0) {

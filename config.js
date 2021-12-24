@@ -6,17 +6,17 @@ module.exports = {
             body: [WORK, CARRY, CARRY, TOUGH, MOVE],
         },
         'upgrader': {
-            maxCount: 2,
+            maxCount: 3,
             sourceId: '5bbcaf1a9099fc012e63a2c2',
             body: [WORK, WORK, CARRY, TOUGH, MOVE],
         },
         'builder': {
-            maxCount: 4,
+            maxCount: 2,
             sourceId: '5bbcaf1a9099fc012e63a2c2',
             body: [WORK, WORK, CARRY, CARRY, TOUGH, MOVE, MOVE],
         },
         'collector': {
-            maxCount: 3,
+            maxCount: 4,
             sourceId: '5bbcaf1a9099fc012e63a2c2',
             body: [WORK, CARRY, CARRY, TOUGH, MOVE],
         },
