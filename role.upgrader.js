@@ -1,7 +1,12 @@
 const roleUpgrader = {
 
-    /** @param {Creep} creep **/
-    run: function (creep) {
+    /**
+     * @param {Creep} creep
+     * @param {StructureLink} source
+     * 升级者
+     * 使用LINK中的资源给房间内的Cotroller升级
+     */
+    run: function (creep, source) {
 
         if (creep.memory.upgrading && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.upgrading = false;
@@ -18,12 +23,7 @@ const roleUpgrader = {
             }
         }
         else {
-            const sources = creep.room.find(FIND_SOURCES);
-            if (!creep.memory.sourceId) {
-                creep.memory.sourceId = sources[Math.floor(Math.random() * sources.length)].id;
-            }
-            const source = sources.find(source => source.id === creep.memory.sourceId);
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            if (creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
             }
         }

@@ -1,5 +1,9 @@
 const rolePorter = {
-  /** @param {Creep} creep **/
+  /**
+   * @param {Creep} creep
+   * 拾荒者（不常用）
+   * 用于收集建筑残骸或机器人残骸中的资源到EXTENSION,SPAWN,TOWER,LINK中
+   */
   run: function (creep) {
     let rest = false;
     if (!creep.memory.harvesting && creep.store[RESOURCE_ENERGY] == 0) {
@@ -39,7 +43,8 @@ const rolePorter = {
           return (
             structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN ||
-            structure.structureType == STRUCTURE_TOWER) &&
+            structure.structureType == STRUCTURE_TOWER||
+            structure.structureType == STRUCTURE_LINK) &&
             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
         }
       });

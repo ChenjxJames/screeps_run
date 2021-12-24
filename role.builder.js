@@ -2,7 +2,11 @@ const config = require('config');
 
 const roleBuilder = {
 
-    /** @param {Creep} creep **/
+    /**
+     * @param {Creep} creep
+     * 建设者
+     * 建造房间内的建筑
+     */
     run: function (creep) {
 
         if (creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {

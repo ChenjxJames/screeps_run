@@ -4,6 +4,7 @@ const roleHarvester = require('role.harvester');
 const roleUpgrader = require('role.upgrader');
 const roleBuilder = require('role.builder');
 const rolePorter = require('role.porter');
+const roleCollector = require('role.collector');
 
 module.exports.loop = function () {
 
@@ -31,6 +32,13 @@ module.exports.loop = function () {
             }
         });
     });
+
+    // 使用LINK传送资源
+    const linkFrom = Game.getObjectById('61b60973ecdd396f1fdc2e78');
+    const linkTo = Game.getObjectById('61b567a2615732cb5dc64f14');
+    if (linkTo.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+        linkFrom.transferEnergy(linkTo);
+    }
 
 
     for (const name in Memory.creeps) {
@@ -76,9 +84,10 @@ module.exports.loop = function () {
     creeps.forEach((creep) => {
         const runs = {
             'harvester': () => roleHarvester.run(creep),
-            'upgrader': () => roleUpgrader.run(creep),
+            'upgrader': () => roleUpgrader.run(creep, linkTo),
             'builder': () => roleBuilder.run(creep),
             'porter': () => rolePorter.run(creep),
+            'collector': () => roleCollector.run(creep),
         }
         runs[creep.memory.role]();
     });
